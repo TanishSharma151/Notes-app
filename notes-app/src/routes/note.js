@@ -1,16 +1,17 @@
 const express = require('express');
-const { handleAllNote, handleSpecificNote, handleNoteMake, handleNoteUpdate, handleNoteDeletion} = require('../controller/note.js');
+const {checkAuth, restrictToLoggedUserOnly} = require("../middleware/auth.js")
+const { handleUserSpecificNote, handleSpecificNote, handleNoteMake, handleNoteUpdate, handleNoteDeletion} = require('../controller/note.js');
 
 const router = express.Router();
 
-router.get('/', handleAllNote)
+router.get('/', checkAuth, restrictToLoggedUserOnly, handleUserSpecificNote)
 
-router.get('/:id', handleSpecificNote)
+router.get('/:id', checkAuth, restrictToLoggedUserOnly, handleSpecificNote)
 
-router.post('/', handleNoteMake);
+router.post('/notes/create', checkAuth, restrictToLoggedUserOnly, handleNoteMake);
 
-router.put('/:id', handleNoteUpdate);
+router.put('/notes/:id', checkAuth, restrictToLoggedUserOnly, handleNoteUpdate);
 
-router.delete('/:id', handleNoteDeletion);
+router.delete('/notes/:id', checkAuth, restrictToLoggedUserOnly, handleNoteDeletion);
 
 module.exports = router;

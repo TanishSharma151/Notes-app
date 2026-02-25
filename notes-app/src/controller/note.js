@@ -1,16 +1,5 @@
 const NOTE = require('../models/notes.js');
 
-async function handleAllNote(req, res) {
-    try{
-        const notes = await NOTE.find().sort({createdAt:-1});
-        res.status(200).json(notes)
-    }
-    catch(error){
-        console.error("Error in handleNotesMake controller");
-        res.status(500).json({message :"Internal server error"});
-    }
-}
-
 async function handleSpecificNote(req,res) {
     try{
         const specficNote = await NOTE.findById(req.params.id);
@@ -23,10 +12,23 @@ async function handleSpecificNote(req,res) {
     }
 }
 
+async function handleUserSpecificNote(req,res) {
+    try{
+        const userId = req.user.id;
+        const notes = await NOTE.find({userId});
+        res.status(200).json(notes);
+        
+    }
+    catch(err){
+        console.log("Error found with user specific notes");
+        res.status(500).json({message : "Internal server error"});
+    }
+}
+
 async function handleNoteMake(req, res) {
     try{
         const {title, content} = req.body;
-        const note = new NOTE({title, content, userid: req.user.id});
+        const note = new NOTE({title, content, userId: req.user.id});
         const savedNote = await note.save();
         res.status(201).json(savedNote);
     }
@@ -65,8 +67,8 @@ async function handleNoteDeletion(req, res) {
 
 module.exports = {
     handleSpecificNote,
-    handleAllNote,
     handleNoteMake,
     handleNoteUpdate,
     handleNoteDeletion,
+    handleUserSpecificNote,
 }
