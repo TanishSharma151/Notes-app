@@ -8,10 +8,10 @@ router.get('/', checkAuth, restrictToLoggedUserOnly, handleUserSpecificNote)
 
 router.get('/:id', checkAuth, restrictToLoggedUserOnly, handleSpecificNote)
 
-router.post('/notes/create', checkAuth, restrictToLoggedUserOnly, handleNoteMake);
+router.post('/create', checkAuth, restrictToLoggedUserOnly, handleNoteMake);
 
-router.put('/notes/:id', checkAuth, restrictToLoggedUserOnly, handleNoteUpdate);
+router.put('/:id', checkAuth, restrictToLoggedUserOnly, handleNoteUpdate);
 
-router.delete('/notes/:id', checkAuth, restrictToLoggedUserOnly, handleNoteDeletion);
+router.delete('/:id', checkAuth, restrictToLoggedUserOnly, handleNoteDeletion);
 
 module.exports = router;
