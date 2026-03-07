@@ -9,6 +9,7 @@ import { useNavigate } from "react-router";
 const DisplayNotes = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingNote, setEditingNote] = useState();
 
   const navigate = useNavigate();
 
@@ -20,7 +21,6 @@ const DisplayNotes = () => {
 
   const fetchNotes = async () => {
     try {
-      console.log(localStorage.getItem("token"));
       const token = localStorage.getItem("token");
       const header = "Bearer " + token;
       const res = await axios.get('http://localhost:8000/notes', {
@@ -74,6 +74,11 @@ const DisplayNotes = () => {
     fetchNotes();
   }, [])
 
+  async function editNote(note) {
+    note.title = setTitle(note.title)
+    note.content = setContent(note.content)
+  }
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -82,7 +87,7 @@ const DisplayNotes = () => {
         {notes.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {notes.map(note => (
-              <NoteCard key={note._id} note={note} />
+              <NoteCard key={note._id} note={note} onEdit={editNote}/>
             ))}
           </div>
         )}
