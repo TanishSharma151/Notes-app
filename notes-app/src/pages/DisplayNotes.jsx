@@ -75,8 +75,10 @@ const DisplayNotes = () => {
   }, [])
 
   async function editNote(note) {
-    note.title = setTitle(note.title)
-    note.content = setContent(note.content)
+    setTitle(note.title);
+    setContent(note.content);
+    setEditingNote(note);
+    setIsModalOpen(true);
   }
 
   return (
