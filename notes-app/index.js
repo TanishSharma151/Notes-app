@@ -1,7 +1,9 @@
+require("dotenv").config();
+
 const express = require('express');
 const {connectToMongoDb} = require('./connect');
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 app.use(express.json());
 const noteRoute = require('./src/routes/note.js');
 const userRoute = require('./src/routes/user.js');
@@ -22,7 +24,7 @@ app.get('/', (req, res) => {
 
 app.use('/notes', restrictToLoggedUserOnly, noteRoute);
 
-connectToMongoDb(process.env.MONGODB ?? 'mongodb://localhost:27017/notes-app').then(()=>{
+connectToMongoDb(process.env.MONGO_URL).then(()=>{
     console.log("MongoDB connected...");
 }).then(()=>{
     app.listen(PORT, ()=>{
