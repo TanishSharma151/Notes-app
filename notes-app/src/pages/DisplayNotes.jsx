@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 const DisplayNotes = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editingNote, setEditingNote] = useState();
+  const [editingNote, setEditingNote] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const DisplayNotes = () => {
       console.log("Error fetching notes.");
       toast.error("Failed to load error.");
 
-      if(err.response.status === 401){
+      if (err.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/");
       }
@@ -47,16 +47,31 @@ const DisplayNotes = () => {
 
   async function saveNote() {
 
+    const token = localStorage.getItem("token");
+
+
     try {
 
-      const token = localStorage.getItem("token");
+      if (editingNote) {
+        const idt = editingNote._id;
 
-      await axios.post("http://localhost:8000/notes/create",
-        { title, content },
-        {
-          headers: { Authorization: "Bearer " + token }
-        }
-      )
+        await axios.put(`http://localhost:8000/notes/${idt}`,
+          { title, content },
+          {
+            headers: { Authorization: "Bearer " + token }
+          }
+        ), setEditingNote(null);
+      }
+
+
+      else {
+        await axios.post("http://localhost:8000/notes/create",
+          { title, content },
+          {
+            headers: { Authorization: "Bearer " + token }
+          }
+        )
+      }
 
       setIsModalOpen(false);
       setTitle("");
@@ -66,6 +81,22 @@ const DisplayNotes = () => {
     catch (err) {
       console.log(err.response?.data || err.message);
       console.log("Error fetching notes.");
+      toast.error("Failed to load error.");
+    }
+  }
+
+  async function deleteNotes(id) {
+    try{
+      const token = localStorage.getItem('token')
+      await axios.put(`http://localhost:8000/notes/${id}`,
+        { isDeleted : true},
+        { headers: {Authorization : "Bearer "+ token}}
+      );
+      fetchNotes();
+    }
+    catch (err) {
+      console.log(err.response?.data || err.message);
+      console.log("Error deleting note.");
       toast.error("Failed to load error.");
     }
   }
@@ -89,7 +120,7 @@ const DisplayNotes = () => {
         {notes.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {notes.map(note => (
-              <NoteCard key={note._id} note={note} onEdit={editNote}/>
+              <NoteCard key={note._id} note={note} onDelete={deleteNotes} onEdit={editNote} />
             ))}
           </div>
         )}

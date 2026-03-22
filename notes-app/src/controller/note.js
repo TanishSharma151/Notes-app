@@ -2,7 +2,7 @@ const NOTE = require('../models/notes.js');
 
 async function handleSpecificNote(req,res) {
     try{
-        const specficNote = await NOTE.findById(req.params.id);
+        const specficNote = await NOTE.findOne({_id: req.params.id, isDeleted : false});
         if(!specficNote) return res.status(404).json({message:'Note not found'});
         res.status(200).json(specficNote);
     }
@@ -15,7 +15,7 @@ async function handleSpecificNote(req,res) {
 async function handleUserSpecificNote(req,res) {
     try{
         const userId = req.user.id;
-        const notes = await NOTE.find({userId});
+        const notes = await NOTE.find({userId, isDeleted: false});
         res.status(200).json(notes);
         
     }
@@ -24,6 +24,7 @@ async function handleUserSpecificNote(req,res) {
         res.status(500).json({message : "Internal server error"});
     }
 }
+
 
 async function handleNoteMake(req, res) {
     try{
@@ -53,6 +54,18 @@ async function handleNoteUpdate(req, res) {
 
 async function handleNoteDeletion(req, res) {
     try{
+    const deletedNote = await NOTE.findByIdAndUpdate(req.params.id, {isDeleted : true});
+    if(!deletedNote) return res.status(404).json({message:'Note doesnt exist'});
+    res.status(200).json({message:"Note deleted"});
+    }
+    catch(error){
+        console.error("Error in the handleNoteDeletion controller");
+        res.status(500).json({message:"Internal server error"});
+    }
+}
+
+async function handlePermanentNoteDeletion(req, res) {
+    try{
     const deletedNote = await NOTE.findByIdAndDelete(req.params.id);
     if(!deletedNote) return res.status(404).json({message:'Note doesnt exist'});
     res.status(200).json({message:"Note deleted"});
@@ -60,6 +73,32 @@ async function handleNoteDeletion(req, res) {
     catch(error){
         console.error("Error in the handleNoteDeletion controller");
         res.status(500).json({message:"Internal server error"});
+    }
+}
+
+async function handleUserSpecificDeletedNote(req,res) {
+    try{
+        const userId = req.user.id;
+        const notes = await NOTE.find({userId, isDeleted: true});
+        res.status(200).json(notes);
+        
+    }
+    catch(err){
+        console.log("Error found with user specific deleted notes");
+        res.status(500).json({message : "Internal server error"});
+    }
+}
+
+async function handleUserSpecificDeletedNoteRestore(req,res) {
+    try{
+        const userId = req.user.id;
+        const notesRestore = await NOTE.findByIdAndUpdate(req.params.id, {isDeleted: false});
+        res.status(200).json({message : "Notes Restored"});
+        
+    }
+    catch(err){
+        console.log("Error found with user specific deleted notes");
+        res.status(500).json({message : "Internal server error"});
     }
 }
 
@@ -71,4 +110,7 @@ module.exports = {
     handleNoteUpdate,
     handleNoteDeletion,
     handleUserSpecificNote,
+    handleUserSpecificDeletedNote,
+    handleUserSpecificDeletedNoteRestore,
+    handlePermanentNoteDeletion,
 }

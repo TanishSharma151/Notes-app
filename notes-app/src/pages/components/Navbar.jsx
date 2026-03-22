@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+
 const Navbar = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const Navbar = () => {
           >
             Signup
           </button>
+
         </div>
       </div>
     );
@@ -43,7 +45,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 px-6 shadow-sm">
       <div className="flex-1">
-        <a className="btn btn-ghost text-3xl">Your personal notes app</a>
+        <a className="btn btn-ghost text-3xl" onClick={() => navigate('/notes')}>Your personal notes app</a>
       </div>
       <div className="flex gap-4 px-9">
         <input
@@ -75,7 +77,7 @@ const Navbar = () => {
               </a>
             </li>
             <li>
-              <a>Settings</a>
+              <a onClick={() => navigate('/notes/deleted')}>Recently Deleted</a>
             </li>
             <li>
               <a onClick={handleLogout}>Logout ⏻</a>

@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import CreateNote from "./pages/CreateNote";
-import NotesDetailPage from "./pages/NotesDetailPage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DisplayNotes from "./pages/DisplayNotes";
+import DeletedNotes from "./pages/components/DeletedNotes";
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/note/:id" element={<NotesDetailPage />} />
+        <Route path="/notes/deleted" element={<DeletedNotes />} />
       </Routes>
     </div>
   );
