@@ -1,116 +1,100 @@
 const NOTE = require('../models/notes.js');
 
-async function handleSpecificNote(req,res) {
-    try{
-        const specficNote = await NOTE.findOne({_id: req.params.id, isDeleted : false});
-        if(!specficNote) return res.status(404).json({message:'Note not found'});
-        res.status(200).json(specficNote);
-    }
-    catch(error){
-        console.error("Error in the handleSpecificNote controller");
-        res.status(500).json({message:"Internal server error"});
-    }
+// GET all notes (not deleted)
+async function handleUserSpecificNote(req, res) {
+  try {
+    const notes = await NOTE.find({ userId: req.user.id, isDeleted: false });
+    res.status(200).json(notes);
+  } catch {
+    res.status(500).json({ message: "Error fetching notes" });
+  }
 }
 
-async function handleUserSpecificNote(req,res) {
-    try{
-        const userId = req.user.id;
-        const notes = await NOTE.find({userId, isDeleted: false});
-        res.status(200).json(notes);
-        
-    }
-    catch(err){
-        console.log("Error found with user specific notes");
-        res.status(500).json({message : "Internal server error"});
-    }
+// GET deleted notes
+async function handleUserSpecificDeletedNote(req, res) {
+  try {
+    const notes = await NOTE.find({ userId: req.user.id, isDeleted: true });
+    res.status(200).json(notes);
+  } catch {
+    res.status(500).json({ message: "Error fetching deleted notes" });
+  }
 }
 
+// GET single note
+async function handleSpecificNote(req, res) {
+  try {
+    const note = await NOTE.findById(req.params.id);
+    if (!note) return res.status(404).json({ message: "Not found" });
+    res.json(note);
+  } catch {
+    res.status(500).json({ message: "Error" });
+  }
+}
 
+// CREATE
 async function handleNoteMake(req, res) {
-    try{
-        const {title, content} = req.body;
-        const note = new NOTE({title, content, userId: req.user.id});
-        const savedNote = await note.save();
-        res.status(201).json(savedNote);
-    }
-    catch(error){
-        console.error("Error in the handleNoteUpdate controller");
-        res.status(500).json({message : 'Internal server error'});
-    }
+  try {
+    const { title, content } = req.body;
+    const note = await NOTE.create({
+      title,
+      content,
+      userId: req.user.id,
+      isDeleted: false
+    });
+    res.status(201).json(note);
+  } catch {
+    res.status(500).json({ message: "Error creating note" });
+  }
 }
 
+// UPDATE
 async function handleNoteUpdate(req, res) {
-    try{
-    const {title, content} = req.body;
-    const updatedNote = await NOTE.findByIdAndUpdate(req.params.id,{title,content}, {new:true});
-    if(!updatedNote) return res.status(404).json({message:"Note not found"});
-    res.status(200).json({message:'Note updated'});
-    }
-    catch(error){
-        console.error("Error in the handleNoteUpdate controller");
-        res.status(500).json({message:"Internal server error"});
-    }
+  try {
+    await NOTE.findByIdAndUpdate(req.params.id, req.body);
+    res.json({ message: "Updated" });
+  } catch {
+    res.status(500).json({ message: "Error updating" });
+  }
 }
 
+// 🔥 SOFT DELETE
 async function handleNoteDeletion(req, res) {
-    try{
-    const deletedNote = await NOTE.findByIdAndUpdate(req.params.id, {isDeleted : true});
-    if(!deletedNote) return res.status(404).json({message:'Note doesnt exist'});
-    res.status(200).json({message:"Note deleted"});
-    }
-    catch(error){
-        console.error("Error in the handleNoteDeletion controller");
-        res.status(500).json({message:"Internal server error"});
-    }
+  try {
+    await NOTE.findByIdAndUpdate(req.params.id, { isDeleted: true });
+    res.json({ message: "Moved to trash" });
+  } catch {
+    res.status(500).json({ message: "Error deleting" });
+  }
 }
 
+// 🔥 RESTORE
+async function handleUserSpecificDeletedNoteRestore(req, res) {
+  try {
+    await NOTE.findByIdAndUpdate(req.params.id, { isDeleted: false });
+    res.json({ message: "Restored" });
+  } catch {
+    res.status(500).json({ message: "Error restoring" });
+  }
+}
+
+// 🔥 PERMANENT DELETE
 async function handlePermanentNoteDeletion(req, res) {
-    try{
-    const deletedNote = await NOTE.findByIdAndDelete(req.params.id);
-    if(!deletedNote) return res.status(404).json({message:'Note doesnt exist'});
-    res.status(200).json({message:"Note deleted"});
-    }
-    catch(error){
-        console.error("Error in the handleNoteDeletion controller");
-        res.status(500).json({message:"Internal server error"});
-    }
+  try {
+    await NOTE.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted permanently" });
+  } catch {
+    res.status(500).json({ message: "Error deleting permanently" });
+  }
 }
-
-async function handleUserSpecificDeletedNote(req,res) {
-    try{
-        const userId = req.user.id;
-        const notes = await NOTE.find({userId, isDeleted: true});
-        res.status(200).json(notes);
-        
-    }
-    catch(err){
-        console.log("Error found with user specific deleted notes");
-        res.status(500).json({message : "Internal server error"});
-    }
-}
-
-async function handleUserSpecificDeletedNoteRestore(req,res) {
-    try{
-        const userId = req.user.id;
-        const notesRestore = await NOTE.findByIdAndUpdate(req.params.id, {isDeleted: false});
-        res.status(200).json({message : "Notes Restored"});
-        
-    }
-    catch(err){
-        console.log("Error found with user specific deleted notes");
-        res.status(500).json({message : "Internal server error"});
-    }
-}
-
 
 
 module.exports = {
-    handleSpecificNote,
-    handleNoteMake,
-    handleNoteUpdate,
-    handleNoteDeletion,
-    handleUserSpecificNote,
-    handleUserSpecificDeletedNote,
-    handleUserSpecificDeletedNoteRestore,
-    handlePermanentNoteDeletion,
-}
+  handleUserSpecificNote,
+  handleUserSpecificDeletedNote,
+  handleSpecificNote,
+  handleNoteMake,
+  handleNoteUpdate,
+  handleNoteDeletion,
+  handleUserSpecificDeletedNoteRestore,
+  handlePermanentNoteDeletion,
+};

@@ -85,19 +85,38 @@ const DisplayNotes = () => {
     }
   }
 
+  // async function deleteNotes(id) {
+  //   try{
+  //     const token = localStorage.getItem('token')
+  //     await axios.put(`http://localhost:8000/notes/${id}`,
+  //       { isDeleted : true},
+  //       { headers: {Authorization : "Bearer "+ token}}
+  //     );
+  //     fetchNotes();
+  //   }
+  //   catch (err) {
+  //     console.log(err.response?.data || err.message);
+  //     console.log("Error deleting note.");
+  //     toast.error("Failed to load error.");
+  //   }
+  // }
+
   async function deleteNotes(id) {
-    try{
-      const token = localStorage.getItem('token')
-      await axios.put(`http://localhost:8000/notes/${id}`,
-        { isDeleted : true},
-        { headers: {Authorization : "Bearer "+ token}}
+    try {
+      const token = localStorage.getItem('token');
+
+      await axios.put(
+        `http://localhost:8000/notes/${id}/delete`,
+        {}, // no body needed
+        {
+          headers: { Authorization: "Bearer " + token }
+        }
       );
+
       fetchNotes();
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err.response?.data || err.message);
-      console.log("Error deleting note.");
-      toast.error("Failed to load error.");
+      toast.error("Error deleting note.");
     }
   }
 
