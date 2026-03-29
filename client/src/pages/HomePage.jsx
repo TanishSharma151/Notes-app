@@ -49,7 +49,7 @@ const HomePage = () => {
           </button>
 
           <button
-            onClick={() => navigate("/notes")}
+            onClick={() => navigate("/login")}
             className="px-6 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition"
           >
             View Notes
