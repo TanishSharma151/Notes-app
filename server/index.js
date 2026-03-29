@@ -11,13 +11,28 @@ const cookieParser = require("cookie-parser");
 const {restrictToLoggedUserOnly} = require('./middleware/auth.js');
 const cors = require('cors');
 
-app.use(cookieParser());
-app.use('/home', userRoute);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://notes-app-wv8f.onrender.com", 
+];
 
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
-    credentials: true
+  origin: function (origin, callback){
+    if (!origin) return callback(true, null);
+
+    if ( allowedOrigins.includes(origin)){
+      return callback(null, true);
+    }
+    else{
+       return callback(new Error("Not allowed by CORS"));
+    }
+  },
+
+  credentials : true,
 }));
+
+app.use(cookieParser());
+app.use('/home', userRoute);
 
 app.get('/', (req, res) => {
   res.send('This is it');
