@@ -1,5 +1,5 @@
 const express = require('express');
-const { checkAuth, restrictToLoggedUserOnly } = require("../middleware/auth.js");
+const { restrictToLoggedUserOnly } = require("../middleware/auth.js");
 
 const {
   handleUserSpecificNote,
@@ -15,21 +15,21 @@ const {
 const router = express.Router();
 
 // 🔥 ORDER MATTERS
-router.get('/deleted', checkAuth, restrictToLoggedUserOnly, handleUserSpecificDeletedNote);
+router.get('/deleted', restrictToLoggedUserOnly, handleUserSpecificDeletedNote);
 
-router.get('/', checkAuth, restrictToLoggedUserOnly, handleUserSpecificNote);
-router.get('/:id', checkAuth, restrictToLoggedUserOnly, handleSpecificNote);
+router.get('/', restrictToLoggedUserOnly, handleUserSpecificNote);
+router.get('/:id', restrictToLoggedUserOnly, handleSpecificNote);
 
-router.post('/create', checkAuth, restrictToLoggedUserOnly, handleNoteMake);
-router.put('/:id', checkAuth, restrictToLoggedUserOnly, handleNoteUpdate);
+router.post('/create', restrictToLoggedUserOnly, handleNoteMake);
+router.put('/:id', restrictToLoggedUserOnly, handleNoteUpdate);
 
 // 🔥 DELETE (soft)
-router.put('/:id/delete', checkAuth, restrictToLoggedUserOnly, handleNoteDeletion);
+router.put('/:id/delete', restrictToLoggedUserOnly, handleNoteDeletion);
 
 // 🔥 RESTORE
-router.put('/:id/restore', checkAuth, restrictToLoggedUserOnly, handleUserSpecificDeletedNoteRestore);
+router.put('/:id/restore', restrictToLoggedUserOnly, handleUserSpecificDeletedNoteRestore);
 
 // 🔥 PERMANENT DELETE
-router.delete('/:id/permanent', checkAuth, restrictToLoggedUserOnly, handlePermanentNoteDeletion);
+router.delete('/:id/permanent', restrictToLoggedUserOnly, handlePermanentNoteDeletion);
 
 module.exports = router;
