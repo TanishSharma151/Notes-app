@@ -14,7 +14,7 @@ const cors = require('cors');
 const allowedOrigins = [
   "http://localhost:5173",
   "https://notes-app-wv8f.onrender.com", 
-  "https://notes-app-five-peach.vercel.app/"
+  "https://notes-app-five-peach.vercel.app"
 ];
 
 app.use(cors({
