@@ -1,10 +1,7 @@
-const {getUser} = require('../service/auth.js');
-
 const jwt = require("jsonwebtoken");
 
 function restrictToLoggedUserOnly(req, res, next) {
   const authHeader = req.headers["authorization"];
-  console.log("Auth header :", req.headers.authorization);
   if (!authHeader) return res.status(401).json({ error: "Unauthorized" });
 
   const token = authHeader.split(" ")[1]; // Bearer <token>
@@ -20,19 +17,6 @@ function restrictToLoggedUserOnly(req, res, next) {
 }
 
 
-async function checkAuth(req, res, next) {
-  const token = req.cookies?.token;
-
-  if (token) {
-    const user = getUser(token);
-    req.user = user || null;
-  } else {
-    req.user = null;
-  }
-  next();
-}
-
 module.exports = {
   restrictToLoggedUserOnly,
-  checkAuth,
 };

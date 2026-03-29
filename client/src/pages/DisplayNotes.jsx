@@ -21,7 +21,7 @@ const DisplayNotes = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get("http://localhost:8000/notes", {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/notes`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -47,7 +47,7 @@ const DisplayNotes = () => {
     try {
       if (editingNote) {
         await axios.put(
-          `http://localhost:8000/notes/${editingNote._id}`,
+          `${import.meta.env.VITE_API_URL}/notes/${editingNote._id}`,
           { title, content },
           {
             headers: { Authorization: "Bearer " + token },
@@ -57,7 +57,7 @@ const DisplayNotes = () => {
         setEditingNote(null);
       } else {
         await axios.post(
-          "http://localhost:8000/notes/create",
+          `${import.meta.env.VITE_API_URL}/notes/create`,
           { title, content },
           {
             headers: { Authorization: "Bearer " + token },
@@ -80,7 +80,7 @@ const DisplayNotes = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:8000/notes/${id}/delete`,
+        `${import.meta.env.VITE_API_URL}/notes/${id}/delete`,
         {},
         {
           headers: { Authorization: "Bearer " + token },

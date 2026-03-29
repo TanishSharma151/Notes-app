@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar from './Navbar'
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
@@ -18,7 +17,7 @@ const DeletedNotes = () => {
     try {
       const token = localStorage.getItem("token");
       const header = "Bearer " + token;
-      const res = await axios.get('http://localhost:8000/notes/deleted', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/notes/deleted`, {
         headers: {
           Authorization: header,
         }
@@ -49,7 +48,7 @@ const DeletedNotes = () => {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:8000/notes/${id}/restore`,
+        `${import.meta.env.VITE_API_URL}/notes/${id}/restore`,
         {},
         {
           headers: { Authorization: "Bearer " + token }
@@ -68,7 +67,7 @@ const DeletedNotes = () => {
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `http://localhost:8000/notes/${id}/permanent`,
+        `${import.meta.env.VITE_API_URL}/notes/${id}/permanent`,
         {
           headers: { Authorization: "Bearer " + token }
         }
