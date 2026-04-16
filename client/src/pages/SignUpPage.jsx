@@ -18,7 +18,6 @@ const SignUpPage = () => {
     }
 
     try {
-      console.log("Sending signup data:", { name, email, password });
       const res = await fetch(`${import.meta.env.VITE_API_URL}/home/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
