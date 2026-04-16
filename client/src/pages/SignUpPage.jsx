@@ -40,7 +40,6 @@ const SignUpPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen gap-10">
-      {/* Left panel */}
       <div className="glass px-20 py-30 rounded-lg shadow-lg max-w-screen">
         <h1 className="text-3xl font-bold mb-6">Welcome!</h1>
         <p className="mb-2">Enter your credentials to sign up.</p>
@@ -55,7 +54,7 @@ const SignUpPage = () => {
         </p>
       </div>
 
-      {/* Signup form */}
+     
       <div className="p-8 shadow-lg rounded-lg max-w-md w-full">
         <h2 className="text-2xl font-semibold mb-6">Create an Account</h2>
 
@@ -114,7 +113,6 @@ const SignUpPage = () => {
         </form>
       </div>
 
-      {/* Sonner toaster */}
       <Toaster position="top-right" richColors />
     </div>
   );
