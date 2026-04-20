@@ -14,7 +14,6 @@ const {
 
 const router = express.Router();
 
-// 🔥 ORDER MATTERS
 router.get('/deleted', restrictToLoggedUserOnly, handleUserSpecificDeletedNote);
 
 router.get('/', restrictToLoggedUserOnly, handleUserSpecificNote);
@@ -23,13 +22,13 @@ router.get('/:id', restrictToLoggedUserOnly, handleSpecificNote);
 router.post('/create', restrictToLoggedUserOnly, handleNoteMake);
 router.put('/:id', restrictToLoggedUserOnly, handleNoteUpdate);
 
-// 🔥 DELETE (soft)
+// Soft DELETE 
 router.put('/:id/delete', restrictToLoggedUserOnly, handleNoteDeletion);
 
-// 🔥 RESTORE
+//  RESTORE
 router.put('/:id/restore', restrictToLoggedUserOnly, handleUserSpecificDeletedNoteRestore);
 
-// 🔥 PERMANENT DELETE
+//  PERMANENT DELETE
 router.delete('/:id/permanent', restrictToLoggedUserOnly, handlePermanentNoteDeletion);
 
 module.exports = router;
