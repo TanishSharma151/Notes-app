@@ -57,7 +57,7 @@ async function handleNoteUpdate(req, res) {
   }
 }
 
-// 🔥 SOFT DELETE
+//  SOFT DELETE
 async function handleNoteDeletion(req, res) {
   try {
     await NOTE.findByIdAndUpdate(req.params.id, { isDeleted: true });
@@ -67,7 +67,7 @@ async function handleNoteDeletion(req, res) {
   }
 }
 
-// 🔥 RESTORE
+//  RESTORE
 async function handleUserSpecificDeletedNoteRestore(req, res) {
   try {
     await NOTE.findByIdAndUpdate(req.params.id, { isDeleted: false });
@@ -77,7 +77,7 @@ async function handleUserSpecificDeletedNoteRestore(req, res) {
   }
 }
 
-// 🔥 PERMANENT DELETE
+//  PERMANENT DELETE
 async function handlePermanentNoteDeletion(req, res) {
   try {
     await NOTE.findByIdAndDelete(req.params.id);
